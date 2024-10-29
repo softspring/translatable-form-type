@@ -1,0 +1,27 @@
+{
+    "name": "softspring/translatable-form-type",
+    "description": "Symfony form type for translatable fields",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.1"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "3.64.*",
+        "phpstan/phpstan": "^1.10",
+        "rector/rector": "^1.0",
+        "symfony/config": "^5.4|^6.0|^7.0",
+        "symfony/dependency-injection": "^5.4|^6.0|^7.0",
+        "symfony/http-kernel": "^5.4|^6.0|^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Softspring\\Component\\TranslatableFormType\\": "src/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
