@@ -1,0 +1,17 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+        bind:
+            $defaultLanguage: '%kernel.default_locale%'
+            $languages: '%kernel.enabled_locales%'
+
+    Softspring\TranslatableBundle\Form\Guesser\:
+        resource: '../../src/Form/Guesser'
+        tags: ['form.type_guesser']
+
+    Softspring\TranslatableBundle\Form\Type\:
+        resource: '../../src/Form/Type'
+        tags: ['form.type']
+

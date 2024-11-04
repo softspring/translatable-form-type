@@ -1,4 +1,4 @@
-# Translatable form type
+# Translatable Bundle
 
 ![Latest Stable](https://img.shields.io/packagist/v/softspring/translatable-bundle?label=stable&style=flat-square)
 ![Latest Unstable](https://img.shields.io/packagist/v/softspring/translatable-bundle?label=unstable&style=flat-square&include_prereleases)

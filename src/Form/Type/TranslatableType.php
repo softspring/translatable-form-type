@@ -1,18 +1,21 @@
 <?php
 
-namespace Softspring\TranslatableBundle\Form;
+namespace Softspring\TranslatableBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TranslatableType extends AbstractType
+abstract class TranslatableType extends AbstractType
 {
+    public function __construct(protected ?string $defaultLanguage, protected ?array $languages)
+    {
+    }
+
     public function getBlockPrefix(): string
     {
         return 'translatable';
@@ -22,10 +25,10 @@ class TranslatableType extends AbstractType
     {
         $resolver->setDefaults([
             'required' => false,
-            'default_language' => null,
-            'languages' => null,
+            'default_language' => $this->defaultLanguage,
+            'languages' => $this->languages,
             'children_attr' => [],
-            'type' => TextType::class,
+            'type' => null,
             'type_options' => [],
         ]);
 
@@ -69,8 +72,7 @@ class TranslatableType extends AbstractType
             $builder->add($lang, $options['type'], $childrenOptions);
         }
 
-        $callback = function ($value) use ($options) { return $this->transform($value, $options); };
-        $builder->addModelTransformer(new CallbackTransformer($callback, $callback));
+        $builder->addModelTransformer(new CallbackTransformer(function ($value) use ($options) { return $this->transform($value, $options); }, function ($value) use ($options) { return $this->reverseTransform($value, $options); }));
     }
 
     public function finishView(FormView $view, FormInterface $form, array $options): void
@@ -80,7 +82,20 @@ class TranslatableType extends AbstractType
         }, ARRAY_FILTER_USE_BOTH);
     }
 
-    protected function transform(?array $data, array $options): array
+    protected function transform(mixed $data, array $options): array
+    {
+        if (empty($data['_trans_id'])) {
+            $data['_trans_id'] = uniqid();
+        }
+
+        if (empty($data['_default'])) {
+            $data['_default'] = $options['default_language'];
+        }
+
+        return $data;
+    }
+
+    protected function reverseTransform(array $data, array $options): mixed
     {
         if (empty($data['_trans_id'])) {
             $data['_trans_id'] = uniqid();
