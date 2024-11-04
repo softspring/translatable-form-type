@@ -1,6 +1,6 @@
 <?php
 
-namespace Softspring\Component\TranslatableFormType\Form;
+namespace Softspring\TranslatableBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;

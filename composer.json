@@ -1,5 +1,5 @@
 {
-    "name": "softspring/translatable-form-type",
+    "name": "softspring/translatable-bundle",
     "description": "Symfony form type for translatable fields",
     "type": "symfony-bundle",
     "license": "MIT",
@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Softspring\\Component\\TranslatableFormType\\": "src/"
+            "Softspring\\TranslatableBundle\\": "src/"
         }
     },
     "config": {
