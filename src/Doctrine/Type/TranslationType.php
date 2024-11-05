@@ -25,6 +25,10 @@ class TranslationType extends JsonType
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
+        if (empty($value)) {
+            return null;
+        }
+
         if (!$value instanceof Translation) {
             throw new RuntimeException(sprintf('Expected %s class, but %s instance received', Translation::class, get_class($value)));
         }
