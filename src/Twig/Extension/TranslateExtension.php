@@ -37,6 +37,10 @@ class TranslateExtension extends AbstractExtension
             return $translatableText[$request->getLocale()];
         }
 
+        if (!empty($translatableText[$translatableText['_default'] ?? null])) {
+            return $translatableText[$translatableText['_default'] ?? null];
+        }
+
         if (!empty($translatableText[$request->getDefaultLocale()])) {
             return $translatableText[$request->getDefaultLocale()];
         }
