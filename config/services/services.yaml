@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    Softspring\TranslatableBundle\Twig\Extension\TranslateExtension:
+        tags: [ 'twig.extension' ]
+
+    Softspring\TranslatableBundle\Doctrine\TranslationFieldListener:
+        tags:
+            - { name: doctrine.event_listener, event: postLoad }

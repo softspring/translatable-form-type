@@ -12,7 +12,7 @@ use Symfony\Component\Form\Guess\ValueGuess;
 
 class TranslatableTypeGuesser extends DoctrineOrmTypeGuesser implements FormTypeGuesserInterface
 {
-    public function guessType($class, $property): ?TypeGuess
+    public function guessType(string $class, string $property): ?TypeGuess
     {
         if (!$ret = $this->getMetadata($class)) {
             return new TypeGuess('Symfony\Component\Form\Extension\Core\Type\TextType', [], Guess::LOW_CONFIDENCE);
@@ -28,17 +28,17 @@ class TranslatableTypeGuesser extends DoctrineOrmTypeGuesser implements FormType
         return null;
     }
 
-    public function guessRequired($class, $property): ?ValueGuess
+    public function guessRequired(string $class, string $property): ?ValueGuess
     {
         return null;
     }
 
-    public function guessMaxLength($class, $property): ?ValueGuess
+    public function guessMaxLength(string $class, string $property): ?ValueGuess
     {
         return null;
     }
 
-    public function guessPattern($class, $property): ?ValueGuess
+    public function guessPattern(string $class, string $property): ?ValueGuess
     {
         return null;
     }

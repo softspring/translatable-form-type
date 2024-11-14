@@ -6,6 +6,12 @@ services:
         bind:
             $defaultLanguage: '%kernel.default_locale%'
             $languages: '%kernel.enabled_locales%'
+            $apiDriver: '%sfs_translatable.api.driver%'
+            $apiEnabled: '%sfs_translatable.api.enabled%'
+
+    Softspring\TranslatableBundle\Form\Extension\:
+        resource: '../../src/Form/Extension'
+        tags: [ 'form.type_extension' ]
 
     Softspring\TranslatableBundle\Form\Guesser\:
         resource: '../../src/Form/Guesser'
@@ -14,4 +20,3 @@ services:
     Softspring\TranslatableBundle\Form\Type\:
         resource: '../../src/Form/Type'
         tags: ['form.type']
-

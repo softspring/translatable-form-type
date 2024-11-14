@@ -3,8 +3,10 @@
 namespace Softspring\TranslatableBundle\Model;
 
 use ArrayAccess;
+use Stringable;
+use Symfony\Component\HttpFoundation\RequestStack;
 
-class Translation implements ArrayAccess
+class Translation implements ArrayAccess, Stringable
 {
     protected ?string $transId = null;
 
@@ -12,23 +14,60 @@ class Translation implements ArrayAccess
 
     protected string $defaultLocale = 'en';
 
+    protected array $metadata = [];
+
+    /**
+     * Implement serialization to avoid storing RequestStack.
+     */
+    public function __serialize(): array
+    {
+        return $this->__toArray();
+    }
+
+    /**
+     * Implement serialization to avoid storing RequestStack.
+     */
+    public function __unserialize(array $data): void
+    {
+        // retrieve default locale
+        $this->defaultLocale = $data['_default'] ?? 'en';
+        unset($data['_default']);
+
+        // retrieve trans id
+        if (isset($data['_trans_id'])) {
+            $this->transId = $data['_trans_id'];
+            unset($data['_trans_id']);
+        } else {
+            $this->transId = uniqid();
+        }
+
+        // retrieve metadata
+        if (isset($data['_metadata'])) {
+            $this->metadata = $data['_metadata'];
+            unset($data['_metadata']);
+        }
+
+        // store translations (remaining fields)
+        $this->translations = $data;
+    }
+
+    /**
+     * RequestStack is initialized by TranslationFieldListener doctrine listener onPostLoad.
+     */
+    private ?RequestStack $requestStack = null;
+
+    /**
+     * @internal RequestStack is initialized by TranslationFieldListener doctrine listener onPostLoad
+     */
+    public function __setRequestStack(?RequestStack $requestStack): void
+    {
+        $this->requestStack = $requestStack;
+    }
+
     public static function createFromArray(array $data): self
     {
         $object = new self();
-
-        // store default locale
-        $object->defaultLocale = $data['_default'] ?? 'en';
-        unset($data['_default']);
-
-        // store trans id
-        if (isset($data['_trans_id'])) {
-            $object->transId = $data['_trans_id'];
-            unset($data['_trans_id']);
-        } else {
-            $object->transId = uniqid();
-        }
-
-        $object->translations = $data;
+        $object->__unserialize($data);
 
         return $object;
     }
@@ -43,7 +82,7 @@ class Translation implements ArrayAccess
         return array_merge($this->translations, [
             '_trans_id' => $this->transId,
             '_default' => $this->defaultLocale,
-        ]);
+        ], !empty($this->metadata) ? ['_metadata' => $this->metadata] : []);
     }
 
     public function getTransId(): ?string
@@ -83,19 +122,28 @@ class Translation implements ArrayAccess
 
     public function translate(?string $locale = null): string
     {
-        if (!empty($this->translations[$locale])) {
-            return $this->translations[$locale];
+        // get locale from current request if no locale specified
+        if (null === $locale && $this->requestStack) {
+            $locale = $this->requestStack->getCurrentRequest()->getLocale();
         }
 
+        // if keep empty flag is set for this locale, return empty string
         // TODO STORE METADADA, AND ALLOW KEEP EMPTY VALUE
         // if (isset($this->metadata[$locale]['keep_empty'])) {
         //     return '';
         // }
 
+        // try to get locale translation
+        if (!empty($this->translations[$locale])) {
+            return $this->translations[$locale];
+        }
+
+        // try to get fallback translation
         if (!empty($this->translations[$this->defaultLocale])) {
             return $this->translations[$this->defaultLocale];
         }
 
+        // no translation
         return '';
     }
 

@@ -1,0 +1,5 @@
+sfs_translatable_api_translate:
+    path: /api/translate
+    methods: [POST]
+    defaults:
+        _controller: 'Softspring\TranslatableBundle\Controller\TranslatorController::translate'

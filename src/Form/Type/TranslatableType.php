@@ -2,6 +2,7 @@
 
 namespace Softspring\TranslatableBundle\Form\Type;
 
+use Softspring\Component\DynamicFormType\Form\Resolver\TypeResolverInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -12,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class TranslatableType extends AbstractType
 {
-    public function __construct(protected ?string $defaultLanguage, protected ?array $languages)
+    public function __construct(protected ?string $defaultLanguage, protected ?array $languages, protected ?TypeResolverInterface $typeResolver = null)
     {
     }
 
@@ -67,6 +68,10 @@ abstract class TranslatableType extends AbstractType
 
             if ($lang !== $options['default_language']) {
                 $childrenOptions['attr']['data-fallback-lang'] = $options['default_language'];
+            }
+
+            if ($this->typeResolver) {
+                $options['type'] = $this->typeResolver->resolveTypeClass($options['type']);
             }
 
             $builder->add($lang, $options['type'], $childrenOptions);

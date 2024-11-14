@@ -8,10 +8,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TranslationType extends TranslatableType
 {
-    public function getBlockPrefix(): string
-    {
-        return 'translation';
-    }
+    //    public function getBlockPrefix(): string
+    //    {
+    //        return 'translation';
+    //    }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
