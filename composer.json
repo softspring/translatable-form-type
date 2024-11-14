@@ -21,6 +21,7 @@
         "google/cloud-translate": "^1.17",
         "phpstan/phpstan": "^1.10",
         "rector/rector": "^1.0",
+        "softspring/dynamic-form-type": "^5.4",
         "symfony/framework-bundle": "^7.1"
     },
     "autoload": {
