@@ -3,10 +3,11 @@
 namespace Softspring\TranslatableBundle\Model;
 
 use ArrayAccess;
+use JsonSerializable;
 use Stringable;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class Translation implements ArrayAccess, Stringable
+class Translation implements ArrayAccess, Stringable, JsonSerializable
 {
     protected ?string $transId = null;
 
@@ -165,5 +166,10 @@ class Translation implements ArrayAccess, Stringable
     public function offsetUnset($offset): void
     {
         unset($this->translations[$offset]);
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return $this->__toArray();
     }
 }

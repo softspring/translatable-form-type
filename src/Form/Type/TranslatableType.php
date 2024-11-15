@@ -3,15 +3,15 @@
 namespace Softspring\TranslatableBundle\Form\Type;
 
 use Softspring\Component\DynamicFormType\Form\Resolver\TypeResolverInterface;
+use Softspring\TranslatableBundle\Form\Transformer\TranslatableTransformer;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-abstract class TranslatableType extends AbstractType
+class TranslatableType extends AbstractType
 {
     public function __construct(protected ?string $defaultLanguage, protected ?array $languages, protected ?TypeResolverInterface $typeResolver = null)
     {
@@ -44,7 +44,6 @@ abstract class TranslatableType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('_trans_id', HiddenType::class);
         $builder->add('_default', HiddenType::class);
 
         foreach ($options['languages'] as $lang) {
@@ -77,7 +76,7 @@ abstract class TranslatableType extends AbstractType
             $builder->add($lang, $options['type'], $childrenOptions);
         }
 
-        $builder->addModelTransformer(new CallbackTransformer(function ($value) use ($options) { return $this->transform($value, $options); }, function ($value) use ($options) { return $this->reverseTransform($value, $options); }));
+        $builder->addModelTransformer(new TranslatableTransformer($options));
     }
 
     public function finishView(FormView $view, FormInterface $form, array $options): void
@@ -85,31 +84,5 @@ abstract class TranslatableType extends AbstractType
         $view->vars['localeFields'] = array_filter($view->children, function (FormView $child, string $locale) {
             return false === str_starts_with($locale, '_');
         }, ARRAY_FILTER_USE_BOTH);
-    }
-
-    protected function transform(mixed $data, array $options): array
-    {
-        if (empty($data['_trans_id'])) {
-            $data['_trans_id'] = uniqid();
-        }
-
-        if (empty($data['_default'])) {
-            $data['_default'] = $options['default_language'];
-        }
-
-        return $data;
-    }
-
-    protected function reverseTransform(array $data, array $options): mixed
-    {
-        if (empty($data['_trans_id'])) {
-            $data['_trans_id'] = uniqid();
-        }
-
-        if (empty($data['_default'])) {
-            $data['_default'] = $options['default_language'];
-        }
-
-        return $data;
     }
 }

@@ -1,21 +1,19 @@
 {% block translatable_widget %}
     {% if form|length > 1 %}
         {% for field in form.vars.localeFields %}
-{#            <div class="input-group mb-3 flex-nowrap">#}
-{#                <div class="input-group-prepend">#}
-{#                    <span class="input-group-text">#}
-{#                        {{ field.vars.label|upper }}#}
-{#                    </span>#}
-{#                </div>#}
                 {{ form_widget(field) }}
-{#            </div>#}
         {% endfor %}
-        {{ form_widget(form._trans_id) }}
+{#        {{ form_widget(form._trans_id) }}#}
         {{ form_widget(form._default) }}
     {% else %}
         {{ form_widget(form|first) }}
     {% endif %}
 {% endblock translatable_widget %}
+
+{% block translation_widget %}
+    {{ form_widget(form._trans_id) }}
+    {{ block('translatable_widget') }}
+{% endblock translation_widget %}
 
 {% block translatable_element_widget %}
     {% if not translate_prepend_button|default(false) %}
@@ -25,20 +23,22 @@
         </span>
     {% endif %}
 
-        {{ form_widget(form, {'attr':attr}) }}
+    {{ form_widget(form, {'attr':attr}) }}
 
     {% if not translate_prepend_button|default(false) %}
     </div>
     {% endif %}
 {% endblock %}
 
-{% block translatable_element_widget_with_api_widget %}
+
+{% block translation_element_widget_with_api_widget %}
     <div class="input-group mb-3">
         <span class="input-group-text">
             {{ form.vars.label|upper }}
         </span>
         <button class="input-group-text p-2 text-primary bg-white border border-1"
                 type="button" {%- for attr,value in translate_prepend_button.attr %}{{ attr }}="{{ value }}" {% endfor -%}
+            title="{{ ('translation_element_widget.button.title_'~translate_prepend_button.api_driver)|trans({}, 'sfs_translation') }}"
         >
         {% if translate_prepend_button.api_driver == 'google' %}
             <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Google_Translate_logo.svg" width="16"

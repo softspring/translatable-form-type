@@ -2,46 +2,37 @@
 
 namespace Softspring\TranslatableBundle\Form\Type;
 
-use Softspring\TranslatableBundle\Model\Translation;
+use Softspring\TranslatableBundle\Form\Transformer\TranslationTransformer;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TranslationType extends TranslatableType
+class TranslationType extends AbstractType
 {
-    //    public function getBlockPrefix(): string
-    //    {
-    //        return 'translation';
-    //    }
+    public function getParent(): string
+    {
+        return TranslatableType::class;
+    }
+
+    public function getBlockPrefix(): string
+    {
+        return 'translation';
+    }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        parent::configureOptions($resolver);
-
         $resolver->setDefaults([
             'type' => TextType::class, // or TextareaType::class
         ]);
     }
 
-    /**
-     * @param Translation|null $data
-     */
-    protected function transform(mixed $data, array $options): array
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if (!$data) {
-            $data = new Translation();
-        }
+        $builder->add('_trans_id', HiddenType::class);
 
-        $data->setDefaultLocale($options['default_language']);
-
-        return $data->__toArray();
-    }
-
-    protected function reverseTransform(array $data, array $options): ?Translation
-    {
-        if (empty($data)) {
-            return null;
-        }
-
-        return Translation::createFromArray($data);
+        $builder->resetModelTransformers();
+        $builder->addModelTransformer(new TranslationTransformer($options));
     }
 }

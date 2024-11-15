@@ -3,10 +3,5 @@ services:
         autowire: true
         autoconfigure: true
         public: false
-#        bind:
-#            $apiDriver: '%sfs_translatable.api.driver%'
 
     Softspring\TranslatableBundle\Controller\TranslatorController: ~
-
-    Softspring\TranslatableBundle\Twig\Extension\TranslatorExtension:
-        tags: [ 'twig.extension' ]
