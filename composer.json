@@ -20,6 +20,7 @@
         "friendsofphp/php-cs-fixer": "3.64.*",
         "google/cloud-translate": "^1.17",
         "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^11.0",
         "rector/rector": "^1.0",
         "softspring/dynamic-form-type": "^5.4",
         "symfony/framework-bundle": "^7.1"
@@ -27,6 +28,11 @@
     "autoload": {
         "psr-4": {
             "Softspring\\TranslatableBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Softspring\\TranslatableBundle\\Tests\\": "tests/"
         }
     },
     "config": {
