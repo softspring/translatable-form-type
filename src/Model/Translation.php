@@ -5,9 +5,10 @@ namespace Softspring\TranslatableBundle\Model;
 use ArrayAccess;
 use JsonSerializable;
 use Stringable;
+use Iterator;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class Translation implements ArrayAccess, Stringable, JsonSerializable
+class Translation implements ArrayAccess, Stringable, JsonSerializable, Iterator
 {
     protected ?string $transId = null;
 
@@ -171,5 +172,30 @@ class Translation implements ArrayAccess, Stringable, JsonSerializable
     public function jsonSerialize(): mixed
     {
         return $this->__toArray();
+    }
+
+    public function current(): mixed
+    {
+        return current($this->translations);
+    }
+
+    public function next(): void
+    {
+        next($this->translations);
+    }
+
+    public function key(): mixed
+    {
+        return key($this->translations);
+    }
+
+    public function valid(): bool
+    {
+        return null !== key($this->translations);
+    }
+
+    public function rewind(): void
+    {
+        reset($this->translations);
     }
 }
