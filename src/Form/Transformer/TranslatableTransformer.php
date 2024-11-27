@@ -2,6 +2,7 @@
 
 namespace Softspring\TranslatableBundle\Form\Transformer;
 
+use Softspring\TranslatableBundle\Model\Translation;
 use Symfony\Component\Form\DataTransformerInterface;
 
 class TranslatableTransformer implements DataTransformerInterface
