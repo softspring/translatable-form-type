@@ -17,6 +17,10 @@ class TranslatableTransformer implements DataTransformerInterface
             $value['_default'] = $this->options['default_language'];
         }
 
+        if ($value instanceof Translation) {
+            return $value->__toArray();
+        }
+
         return $value;
     }
 
