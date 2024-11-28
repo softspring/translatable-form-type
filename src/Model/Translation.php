@@ -3,9 +3,9 @@
 namespace Softspring\TranslatableBundle\Model;
 
 use ArrayAccess;
+use Iterator;
 use JsonSerializable;
 use Stringable;
-use Iterator;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class Translation implements ArrayAccess, Stringable, JsonSerializable, Iterator
