@@ -33,22 +33,25 @@ class TranslationExtension extends AbstractTypeExtension
                 continue;
             }
 
-            $fallback = $view->children['_default']->vars['value'];
+            $fallback = $view->children['_default']->vars['value'] ?? 'en';
 
             if ($locale === $fallback) {
                 continue;
             }
 
+            $fallbackField = $view->children[$fallback] ?? null;
+
             $field->vars['translate_prepend_button'] = [
                 'attr' => [
                     'data-translate' => '',
-                    'data-translate-source-field' => $view->children[$fallback]->vars['full_name'],
+                    'data-translate-source-field' => $fallbackField->vars['full_name'] ?? '',
                     'data-translate-target-field' => $field->vars['full_name'],
                     'data-translate-source-locale' => $fallback,
                     'data-translate-target-locale' => $locale,
                     'data-translate-url' => $this->router->generate('sfs_translatable_api_translate'),
                 ],
                 'api_driver' => $this->apiDriver,
+                'enabled' => null !== $fallbackField,
             ];
 
             $field->vars['block_prefixes'][] = 'translation_element_widget_with_api';
