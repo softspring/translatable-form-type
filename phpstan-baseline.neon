@@ -1,0 +1,5 @@
+parameters:
+    ignoreErrors:
+        -
+            message: "#Access to an undefined property Doctrine\\\\Persistence\\\\Mapping\\\\ClassMetadata<object>::\\$fieldMappings#"
+            reportUnmatched: false

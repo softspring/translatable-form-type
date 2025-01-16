@@ -3,6 +3,7 @@
 namespace Softspring\TranslatableBundle\Doctrine;
 
 use Doctrine\ORM\Event\PostLoadEventArgs;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Softspring\TranslatableBundle\Model\Translation;
 use Symfony\Component\HttpFoundation\RequestStack;
 
