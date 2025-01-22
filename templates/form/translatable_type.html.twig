@@ -1,1 +1,2 @@
-{% extends '@SfsTranslatable/form/translatable_type.bootstrap5.html.twig' %}
+{% set sfs_components_theme = sfs_cms_sylius_bundle is defined ? 'semantic-ui' : 'bootstrap5' %}
+{% extends '@SfsTranslatable/form/translatable_type.'~(sfs_components_theme|default('bootstrap5'))~'.html.twig' %}
