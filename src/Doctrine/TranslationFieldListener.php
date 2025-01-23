@@ -3,7 +3,6 @@
 namespace Softspring\TranslatableBundle\Doctrine;
 
 use Doctrine\ORM\Event\PostLoadEventArgs;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Softspring\TranslatableBundle\Model\Translation;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -20,14 +19,18 @@ class TranslationFieldListener
         $entityReflection = $classMetadata->getReflectionClass();
 
         foreach ($classMetadata->fieldMappings as $fieldMapping) {
-            if ('sfs_translation' !== $fieldMapping->type) {
+            // fieldMapping is an array in older doctrine versions, >= 3 is an object.
+            $type = is_array($fieldMapping) ? $fieldMapping['type'] : $fieldMapping->type;
+            $fieldName = is_array($fieldMapping) ? $fieldMapping['fieldName'] : $fieldMapping->fieldName;
+
+            if ('sfs_translation' !== $type) {
                 continue;
             }
 
-            if ($entityReflection->hasMethod('get'.ucfirst($fieldMapping->fieldName))) {
-                $translation = $entity->{'get'.ucfirst($fieldMapping->fieldName)}();
-            } elseif ($entityReflection->hasProperty($fieldMapping->fieldName) && $entityReflection->getProperty($fieldMapping->fieldName)->isPublic()) {
-                $translation = $entity->{$fieldMapping->fieldName};
+            if ($entityReflection->hasMethod('get'.ucfirst($fieldName))) {
+                $translation = $entity->{'get'.ucfirst($fieldName)}();
+            } elseif ($entityReflection->hasProperty($fieldName) && $entityReflection->getProperty($fieldName)->isPublic()) {
+                $translation = $entity->{$fieldName};
             } else {
                 $translation = null;
             }
