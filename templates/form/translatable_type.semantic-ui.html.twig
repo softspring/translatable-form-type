@@ -32,20 +32,22 @@
 
 
 {% block translation_element_widget_with_api_widget %}
+
     <div class="input-group mb-3">
-        <span class="input-group-text">
+        <div class="input-group-text">
             {{ form.vars.label|upper }}
-        </span>
-        <button class="input-group-text p-2 text-primary bg-white border border-1"
-                type="button" {%- for attr,value in translate_prepend_button.attr %}{{ attr }}="{{ value }}" {% endfor -%}
-            title="{{ ('translation_element_widget.button.title_'~translate_prepend_button.api_driver)|trans({}, 'sfs_translation') }}"
-        >
-        {% if translate_prepend_button.api_driver == 'google' %}
-            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Google_Translate_logo.svg" width="16"
-                 height="18">
-        {% endif %}
-        </button>
-        {{ form_widget(form, {'attr':attr}) }}
+        </div>
+        <div class="ui left action input">
+            <button class="ui icon button"
+                    type="button" {%- for attr,value in translate_prepend_button.attr %}{{ attr }}="{{ value }}" {% endfor -%}
+                    title="{{ ('translation_element_widget.button.title_'~translate_prepend_button.api_driver)|trans({}, 'sfs_translation') }}" >
+                    {% if translate_prepend_button.api_driver == 'google' %}
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Google_Translate_logo.svg" width="16"
+                             height="18">
+                    {% endif %}
+            </button>
+            {{ form_widget(form, {'attr':attr}) }}
+        </div>
     </div>
 {% endblock %}
 
