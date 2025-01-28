@@ -17,15 +17,15 @@
 
 {% block translatable_element_widget %}
     {% if not translate_prepend_button|default(false) %}
-    <div class="input-group mb-3 flex-nowrap">
-        <span class="input-group-text">
-            {{ form.vars.label|upper }}
-        </span>
+    <div class="field">
+        <div class="ui left labeled input fluid">
+            <div class="ui basic label"> {{ form.vars.label|upper }}</div>
     {% endif %}
 
     {{ form_widget(form, {'attr':attr}) }}
 
     {% if not translate_prepend_button|default(false) %}
+        </div>
     </div>
     {% endif %}
 {% endblock %}
@@ -33,20 +33,18 @@
 
 {% block translation_element_widget_with_api_widget %}
 
-    <div class="input-group mb-3">
-        <div class="input-group-text">
-            {{ form.vars.label|upper }}
-        </div>
-        <div class="ui fluid left action input">
+    <div class="field">
+        <div class="ui right labeled input fluid">
+            <div class="ui basic label"> {{ form.vars.label|upper }}</div>
+            {{ form_widget(form, {'attr':attr}) }}
             <button class="ui icon button"
                     type="button" {%- for attr,value in translate_prepend_button.attr %}{{ attr }}="{{ value }}" {% endfor -%}
-                    title="{{ ('translation_element_widget.button.title_'~translate_prepend_button.api_driver)|trans({}, 'sfs_translation') }}" >
-                    {% if translate_prepend_button.api_driver == 'google' %}
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Google_Translate_logo.svg" width="16"
-                             height="18">
-                    {% endif %}
+            title="{{ ('translation_element_widget.button.title_'~translate_prepend_button.api_driver)|trans({}, 'sfs_translation') }}" >
+            {% if translate_prepend_button.api_driver == 'google' %}
+                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Google_Translate_logo.svg" width="16"
+                     height="18">
+            {% endif %}
             </button>
-            {{ form_widget(form, {'attr':attr}) }}
         </div>
     </div>
 {% endblock %}
